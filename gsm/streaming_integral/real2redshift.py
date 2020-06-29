@@ -1,24 +1,23 @@
-from scipy.interpolate import interp1d, interp2d
 import numpy as np
+from typing import Callable
 from scipy.integrate import simps, quadrature, quad
 
-def integrand_s_mu(s_c, mu_c, twopcf_function, los_pdf_function):
+
+def integrand_s_mu(
+    s_c: float, mu_c: float, twopcf_function: Callable, los_pdf_function: Callable
+):
     """
-	Computes the streaming model integrand ( https://arxiv.org/abs/1710.09379, Eq 22 ) at s, mu
-	Args:
-		s_c: np.array
-			bin centers for the pair distance bins.
-		mu_c: np.array
-			bin centers for the cosine of the angle rescpect to the line of sight bins.
-		twopcf_function: function
-			function that given pair distance as an argument returns the real space two point 
-			correlation function.
-		los_pdf_function: function
-			given the line of sight velocity, perpendicular and parallel distances to the line
-			of sight, returns the value of the line of sight pairwise velocity distribution.
-	Returns:
-		integrand: np.ndarray
-			2-D array with the value of the integrand evaluated at the given s_c and mu_c.			
+    Computes the streaming model integrand ( https://arxiv.org/abs/1710.09379, Eq 22 ) at s, mu
+    Args:
+        s_c: bin centers for the pair distance bins.
+        mu_c: bin centers for the cosine of the angle rescpect to the line of sight bins.
+        twopcf_function: function that given pair distance as an argument returns the real space two point 
+                correlation function.
+        los_pdf_function: given the line of sight velocity, perpendicular and parallel distances to the line
+                of sight, returns the value of the line of sight pairwise velocity distribution.
+    Returns:
+        integrand: np.ndarray
+            2-D array with the value of the integrand evaluated at the given s_c and mu_c.			
 	"""
 
     def integrand(y):
@@ -33,34 +32,34 @@ def integrand_s_mu(s_c, mu_c, twopcf_function, los_pdf_function):
         vlos = (s_parallel - y) * np.sign(y)
         r = np.sqrt(s_perp ** 2 + y ** 2)
         return los_pdf_function(vlos, s_perp, np.abs(y)) * (1 + twopcf_function(r))
+
     return integrand
 
 
 def simps_integrate(
-    s, mu, twopcf_function, los_pdf_function, limit=70.0, epsilon=0.0001, n=300
+    s: np.array,
+    mu: np.array,
+    twopcf_function: Callable,
+    los_pdf_function: Callable,
+    limit: float = 70.0,
+    epsilon: float = 0.0001,
+    n: int = 300,
 ):
     """
-	Computes the streaming model integral ( https://arxiv.org/abs/1710.09379, Eq 22 ) 
-	Args:
-		s: np.array
-			pair distance bins.
-		mu: np.array
-			cosine of the angle rescpect to the line of sight bins.
-		twopcf_function: function
-			function that given pair distance as an argument returns the real space two point 
-			correlation function.
-		los_pdf_function: function
-			given the line of sight velocity, perpendicular and parallel distances to the line
-			of sight, returns the value of the line of sight pairwise velocity distribution.
-		limit: float
-			r_parallel limits of the integral.
-		epsilon: float
-			due to discontinuity at zero, add small offset +-epsilon to estimate integral.
-		n: int
-			number of points to evaluate the integrand.
-	Returns:
-		twopcf_s: np.ndarray
-			2-D array with the resulting redshift space two point correlation function
+    Computes the streaming model integral ( https://arxiv.org/abs/1710.09379, Eq 22 ) 
+    Args:
+        s: pair distance bins.
+        mu: cosine of the angle rescpect to the line of sight bins.
+        twopcf_function: function that given pair distance as an argument returns the real space two point 
+                correlation function.
+        los_pdf_function: given the line of sight velocity, perpendicular and parallel distances to the line
+                of sight, returns the value of the line of sight pairwise velocity distribution.
+        limit: r_parallel limits of the integral.
+        epsilon: due to discontinuity at zero, add small offset +-epsilon to estimate integral.
+        n: number of points to evaluate the integrand.
+    Returns:
+        twopcf_s: np.ndarray
+            2-D array with the resulting redshift space two point correlation function
 	"""
 
     s_c = 0.5 * (s[1:] + s[:-1])
