@@ -17,7 +17,7 @@ def losmoments2gaussian(mean: Callable, scale: Callable)->Callable:
     def pdf_los(vlos: np.array, r_perp: np.array, r_parallel: np.array):
 
         return norm.pdf(
-            vlos, loc=mean(r_parallel, r_perp), scale=scale(r_parallel, r_perp)
+            vlos, loc=mean(r_perp, r_parallel), scale=scale(r_perp, r_parallel)
         )
 
     return pdf_los
