@@ -12,7 +12,7 @@ def test__project_to_los():
     moments = Moments(m_10, c_20, c_02)
 
     mean = project_to_los(moments, 1, mode='m')
-    std = project_to_los(moments, 2, mode='c')
+    c_2 = project_to_los(moments, 2, mode='c')
 
     r_perp = 10.
     r_parallel = 5.
@@ -20,4 +20,4 @@ def test__project_to_los():
     mu = r_parallel/r
     
     assert mean(r_perp,r_parallel) == pytest.approx(m_10(r)*mu,rel=0.01)
-    assert std(r_perp,r_parallel) == pytest.approx(mu**2*c_20(r) + (1-mu**2)*c_02(r), rel=0.01)
+    assert c_2(r_perp,r_parallel) == pytest.approx(mu**2*c_20(r) + (1-mu**2)*c_02(r), rel=0.01)
