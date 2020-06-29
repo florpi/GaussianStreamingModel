@@ -1,7 +1,8 @@
 import numpy as np
+from collections import namedtuple
 from typing import Callable
-
 from gsm.models.gaussian import from_los
+from gsm.moments.project_to_los import project_to_los
 
 def moments2gaussian(m_10: Callable, c_20: Callable, c_02: Callable)->Callable:
     """
@@ -16,7 +17,11 @@ def moments2gaussian(m_10: Callable, c_20: Callable, c_02: Callable)->Callable:
     Returns:
         pdf_los: line of sight pairwise velocity PDF 
     """
-    mean = project_moments(m_10)
-    std = project_moments(c_02, c_20)
+
+    Moments = namedtuple('Moments', ['m_10', 'c_20', 'c_02'])
+    moments = Moments(m_10, c_20, c_02)
+    mean = project_to_los(moments, 1, mode='m')
+    c_2 = project_to_los(moments, 2, mode='c')
+    std = lambda r_perp, r_parallel: np.sqrt(c_2(r_perp, r_parallel))
     return from_los.losmoments2gaussian(mean, std)
 
