@@ -17,7 +17,6 @@ def project_moments(m_10: Callable, c_20: Callable, c_02: Callable)->Callable:
     Returns:
         pdf_los: line of sight pairwise velocity PDF 
     """
-
     Moments = namedtuple('Moments', ['m_10', 'c_20', 'c_02'])
     moments = Moments(m_10, c_20, c_02)
     mean = project_to_los(moments, 1, mode='m')
