@@ -59,10 +59,10 @@ def interpolate_moments2parameters(
     for i in range(len(r_perp)):
         for j in range(len(r_parallel)):
             st_parameters[i, j, :] = moments2parameters(
-                mean(r_perp[i], r_parallel[j]), 
-                std(r_perp[i], r_parallel[j]), 
-                gamma1(r_perp[i], r_parallel[j]), 
-                gamma2(r_perp[i], r_parallel[j]), 
+                mean(r_perp[i], r_parallel[j])[0][0], 
+                std(r_perp[i], r_parallel[j])[0][0], 
+                gamma1(r_perp[i], r_parallel[j])[0][0], 
+                gamma2(r_perp[i], r_parallel[j])[0][0], 
             )
     callable_st_parameters = []
     for p in range(st_parameters.shape[-1]):

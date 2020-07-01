@@ -43,8 +43,8 @@ def moments2skewt(m_10: Callable, c_20: Callable, c_02: Callable,
     mean, std, gamma1, gamma2 = project_moments(m_10, c_20, c_02,
             c_12, c_30,
             c_40, c_04, c_22)
-    r_perp = np.linspace(0.,100.,100)
-    r_parallel = np.linspace(0.,100.,100)
+    r_perp = np.linspace(0.1,100.,100)
+    r_parallel = np.linspace(0.1,100.,100)
     w, v_c, alpha, nu = interpolate_moments2parameters(r_perp, r_parallel, 
             mean, std, gamma1, gamma2)
 
