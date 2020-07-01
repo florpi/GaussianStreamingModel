@@ -36,7 +36,7 @@ def project_moments(m_10: Callable, c_20: Callable, c_02: Callable,
     gamma2 = lambda r_perp, r_parallel: c_4(r_perp, r_parallel)/c_2(r_perp, r_parallel)**2 - 3.
     return mean, std, gamma1, gamma2
 
-def moments2kewt(m_10: Callable, c_20: Callable, c_02: Callable,
+def moments2skewt(m_10: Callable, c_20: Callable, c_02: Callable,
                 c_12: Callable, c_30: Callable, 
                 c_40: Callable, c_04: Callable, c_22: Callable)->Callable:
  
