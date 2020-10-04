@@ -41,7 +41,7 @@ def simps_integrate(
     mu: np.array,
     twopcf_function: Callable,
     los_pdf_function: Callable,
-    limit: float = 70.0,
+    limit: float = 120.0,
     epsilon: float = 0.0001,
     n: int = 300,
 ):
