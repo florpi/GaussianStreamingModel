@@ -1,7 +1,7 @@
 import numpy as np
 from typing import List, Callable
 from scipy.special import gamma
-from scipy.optimize import fsolve
+from scipy.optimize import fsolve, minimize
 from scipy.interpolate import RectBivariateSpline
 
 
@@ -67,7 +67,7 @@ def interpolate_moments2parameters(
     callable_st_parameters = []
     for p in range(st_parameters.shape[-1]):
         callable_st_parameters.append(
-            RectBivariateSpline(r_perp, r_parallel, st_parameters[..., p])
+                RectBivariateSpline(r_perp, r_parallel, st_parameters[:,:, p])
         )
 
     return callable_st_parameters

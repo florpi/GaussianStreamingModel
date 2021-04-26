@@ -45,6 +45,7 @@ def test_moments2parameters():
     np.testing.assert_almost_equal(gamma2_estimated, true_gamma2, decimal=2)
 
 
+'''
 def test_interpolate_moments():
 
     r_parallel = np.arange(0.5, 100, 1.)
@@ -75,5 +76,53 @@ def test_interpolate_moments():
     assert v_c(r_perp_test,r_par_test) == pytest.approx(v_c_true, rel=0.01)
     assert alpha(r_perp_test,r_par_test) == pytest.approx(alpha_true, rel=0.01)
     assert nu(r_perp_test,r_par_test) == pytest.approx(nu_true, rel=0.01)
+
+'''
+
+def test_small_scale_moments():
+    true_mean = -3.
+    true_std = 2.
+    true_gamma1 = -1.
+    true_gamma2 = 3.2
+
+    w, v_c, alpha, nu = moments2parameters(
+        true_mean, true_std, true_gamma1, true_gamma2, p0=(-0.7, 5)
+    )
+
+    (
+        mean_estimated,
+        std_estimated,
+        gamma1_estimated,
+        gamma2_estimated,
+    ) = parameters2moments(w, v_c, alpha, nu)
+
+    np.testing.assert_almost_equal(mean_estimated, true_mean, decimal=2)
+    np.testing.assert_almost_equal(std_estimated, true_std, decimal=2)
+    np.testing.assert_almost_equal(gamma1_estimated, true_gamma1, decimal=2)
+    np.testing.assert_almost_equal(gamma2_estimated, true_gamma2, decimal=2)
+
+
+def test_large_scale_moments():
+    true_mean = 0. 
+    true_std = 6 
+    true_gamma1 = 0. 
+    true_gamma2 = 0.2
+
+    w, v_c, alpha, nu = moments2parameters(
+        true_mean, true_std, true_gamma1, true_gamma2, p0=(-0.7, 5)
+    )
+
+    (
+        mean_estimated,
+        std_estimated,
+        gamma1_estimated,
+        gamma2_estimated,
+    ) = parameters2moments(w, v_c, alpha, nu)
+
+    np.testing.assert_almost_equal(mean_estimated, true_mean, decimal=2)
+    np.testing.assert_almost_equal(std_estimated, true_std, decimal=2)
+    np.testing.assert_almost_equal(gamma1_estimated, true_gamma1, decimal=2)
+    np.testing.assert_almost_equal(gamma2_estimated, true_gamma2, decimal=2)
+
 
 
