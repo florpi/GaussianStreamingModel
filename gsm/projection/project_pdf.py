@@ -1,6 +1,13 @@
 import numpy as np
 from scipy.integrate import simps
 
+def vt_integrand(pdf_rt, v_t, v_los, cos_theta, sin_theta, r):
+    v_r = (v_los - v_t * sin_theta) / cos_theta
+    return (1 / cos_theta * pdf_rt(v_r=v_r, v_t=v_t, r=r)).T
+
+def vr_integrand(pdf_rt, v_r, v_los, cos_theta, sin_theta, r):
+    v_t = (v_los - v_r * cos_theta) / sin_theta
+    return 1 / sin_theta * pdf_rt(v_r=v_r, v_t=v_t, r=r)
 
 def integrand(pdf_rt, v_r, v_los, cos_theta, sin_theta, r):
     v_t = (v_los - v_r * cos_theta) / sin_theta
@@ -27,16 +34,30 @@ def get_projected_pdf(
     for i, r_perp in enumerate(r_perpendicular):
         for j, r_par in enumerate(r_parallel):
             r = np.sqrt(r_perp**2 + r_par**2)
-            los_pdf[i, j, :] = simps(
-                integrand(
-                    pdf_rt,
-                    v_r.reshape(1, -1),
-                    v_los=v_los.reshape(-1, 1),
-                    cos_theta=get_cos_theta(r, r_par),
-                    sin_theta=get_sin_theta(r, r_par),
-                    r=r,
-                ),
-                v_r,
-                axis=-1,
-            )
+            if r_par < r_perp:
+                los_pdf[i, j, :] = simps(
+                    vr_integrand(
+                        pdf_rt,
+                        v_r.reshape(1, -1),
+                        v_los=v_los.reshape(-1, 1),
+                        cos_theta=get_cos_theta(r, r_par),
+                        sin_theta=get_sin_theta(r, r_par),
+                        r=r,
+                    ),
+                    v_r,
+                    axis=-1,
+                )
+            else:
+                los_pdf[i, j, :] = simps(
+                    vt_integrand(
+                        pdf_rt,
+                        v_r.reshape(-1, 1),
+                        v_los=v_los.reshape(1, -1),
+                        cos_theta=get_cos_theta(r, r_par),
+                        sin_theta=get_sin_theta(r, r_par),
+                        r=r,
+                    ),
+                    v_r,
+                    axis=-1,
+                )
     return los_pdf

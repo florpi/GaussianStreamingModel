@@ -15,7 +15,6 @@ def losmoments2gaussian(mean: Callable, scale: Callable)->Callable:
         pdf_los: line of sight pairwise velocity PDF 
     """
     def pdf_los(vlos: np.array, r_perp: np.array, r_parallel: np.array):
-
         return norm.pdf(
             vlos, loc=mean(r_perp, r_parallel), scale=scale(r_perp, r_parallel)
         )
