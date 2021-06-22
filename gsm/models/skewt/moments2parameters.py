@@ -1,7 +1,7 @@
 import numpy as np
 from typing import List, Callable
 from scipy.special import gamma
-from scipy.optimize import fsolve, minimize
+from scipy.optimize import fsolve, minimize, root
 from scipy.interpolate import RectBivariateSpline
 
 

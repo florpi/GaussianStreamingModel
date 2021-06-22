@@ -14,12 +14,12 @@ def gaussian_pdf(vels, r):
     return rv.pdf(vels)
 
 
-def analytical_mean(r_parallel, r_perp):
+def analytical_mean(r_perp, r_parallel):
     r = np.sqrt(r_perp.reshape(-1,1)**2 + r_parallel.reshape(1,-1)**2)
     return  r_parallel.reshape(1,-1)/r * mean(r)
 
-def analytical_std(r_parallel, r_perp):
-    return 5
+def analytical_std(r_perp, r_parallel):
+    return 5.*np.ones((len(r_perp), len(r_parallel)))
 
 
 def pdf_rt(r, v_r, v_t):
@@ -32,9 +32,9 @@ def pdf_rt(r, v_r, v_t):
 
 
 def test__get_analytical_mean():
-    r_parallel = np.linspace(1,5,10)
-    r_perp = np.linspace(1.,5,10)
-    v_los = np.linspace(-100,100,300)
+    r_parallel = np.linspace(1,5,5)
+    r_perp = np.linspace(1.,8,10)
+    v_los = np.linspace(-100,100,100)
     los_pdf = get_projected_pdf(
         pdf_rt,r_perp, r_parallel, v_los,
     ) 
@@ -47,9 +47,9 @@ def test__get_analytical_mean():
     np.testing.assert_almost_equal(actual, desired, decimal=4)
 
 def test__get_analytical_std():
-    r_parallel = np.linspace(1,5,10)
-    r_perp = np.linspace(1.,5,10)
-    v_los = np.linspace(-100,100,300)
+    r_parallel = np.linspace(1,5,5)
+    r_perp = np.linspace(1.,8,10)
+    v_los = np.linspace(-100,100,100)
     los_pdf = get_projected_pdf(
         pdf_rt,r_perp, r_parallel, v_los,
     ) 
@@ -58,11 +58,11 @@ def test__get_analytical_std():
         v_los,
         axis=-1
     )
+    desired_mean = analytical_mean(r_perp,r_parallel)
     actual = simps(
         v_los**2*los_pdf, 
         v_los,
         axis=-1
-    ) - actual_mean**2
+    ) - desired_mean **2
     desired = analytical_std(r_perp,r_parallel)
-
     np.testing.assert_almost_equal(actual, desired, decimal=2)

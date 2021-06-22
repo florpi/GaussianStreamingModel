@@ -44,11 +44,13 @@ def moments2skewt(m_10: Callable, c_20: Callable, c_02: Callable,
             c_20=c_20, c_02=c_02,
             c_12=c_12, c_30=c_30,
             c_40=c_40, c_04=c_04, c_22=c_22)
-    r_perp = np.linspace(0.001,200.,200)
-    r_parallel = np.linspace(0.001,200.,200)
+    #r_perp = np.linspace(0.001,200.,200)
+    #r_parallel = np.linspace(0.001,200.,200)
+    r_perp = np.geomspace(0.71,200.,200)
+    r_parallel = np.geomspace(0.71,200.,200)
     w, v_c, alpha, nu = interpolate_moments2parameters(r_perp, r_parallel, 
             mean=mean, std=std, gamma1=gamma1, gamma2=gamma2)
-
+    
     return from_los.losmoments2skewt(w, v_c, alpha, nu)
 
 

@@ -17,7 +17,6 @@ def losmoments2skewt(w: Callable, v_c: Callable, alpha: Callable, nu: Callable):
 
         sorted_r_parallel = np.sort(r_parallel[0,:])
         idx_to_unsort_parallel = r_parallel[0,:].argsort().argsort()
- 
         return skewt.pdf(
             v=vlos,
             w=w(sorted_r_perp, sorted_r_parallel)[idx_to_unsort_perp,:][:, idx_to_unsort_parallel],
