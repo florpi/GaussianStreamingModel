@@ -31,14 +31,16 @@ def integrand_s_mu(
         y = y.reshape(1, -1)
         vlos = (s_parallel - y) * np.sign(y)
         r = np.sqrt(s_perp ** 2 + y ** 2)
-        return los_pdf_function(vlos, s_perp, np.abs(y)) * (1 + twopcf_function(r))
+        los_pdf = np.nan_to_num(los_pdf_function(vlos, s_perp, np.abs(y)),
+                copy=False)
+        return los_pdf * (1 + twopcf_function(r))
 
     return integrand
 
 
 def simps_integrate(
-    s: np.array,
-    mu: np.array,
+    s_c: np.array,
+    mu_c: np.array,
     twopcf_function: Callable,
     los_pdf_function: Callable,
     limit: float = 120.0,
@@ -48,8 +50,8 @@ def simps_integrate(
     """
     Computes the streaming model integral ( https://arxiv.org/abs/1710.09379, Eq 22 ) 
     Args:
-        s: pair distance bins.
-        mu: cosine of the angle rescpect to the line of sight bins.
+        s_c: pair distance bins.
+        mu_c: cosine of the angle rescpect to the line of sight bins.
         twopcf_function: function that given pair distance as an argument returns the real space two point 
                 correlation function.
         los_pdf_function: given the line of sight velocity, perpendicular and parallel distances to the line
@@ -61,9 +63,6 @@ def simps_integrate(
         twopcf_s: np.ndarray
             2-D array with the resulting redshift space two point correlation function
 	"""
-
-    s_c = 0.5 * (s[1:] + s[:-1])
-    mu_c = 0.5 * (mu[1:] + mu[:-1])
 
     streaming_integrand = integrand_s_mu(s_c, mu_c, twopcf_function, los_pdf_function)
     # split integrand in two due to discontinuity at 0
