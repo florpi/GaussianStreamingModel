@@ -63,8 +63,8 @@ def moments2skewt(
     c_40: Callable,
     c_04: Callable,
     c_22: Callable,
-    r_max: float,
-    n_eval: int = 200,
+    r_max: float=70.,
+    n_eval: int = 70,
     use_spl: bool = False,
 ) -> Callable:
 
@@ -78,10 +78,8 @@ def moments2skewt(
         c_04=c_04,
         c_22=c_22,
     )
-    # r_perp = np.linspace(0.001,200.,200)
-    # r_parallel = np.linspace(0.001,200.,200)
-    r_perp = np.geomspace(0.71, r_max, 100)
-    r_parallel = np.geomspace(0.71, r_max, n_eval)
+    r_perp = np.geomspace(0.7, r_max, n_eval)
+    r_parallel = np.geomspace(0.7, r_max, n_eval)
     if not use_spl:
         w, v_c, alpha, nu = interpolate_moments2parameters(
             r_perp, r_parallel, mean=mean, std=std, gamma1=gamma1, gamma2=gamma2
