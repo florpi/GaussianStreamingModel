@@ -1,0 +1,4 @@
+halotools
+julia
+numpy
+scipy
